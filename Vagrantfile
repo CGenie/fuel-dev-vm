@@ -36,6 +36,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # using a specific IP.
   config.vm.network :private_network, ip: "192.168.60.10"
 
+  # Use NFS for shared folders for better performance
+  # NOTE: On Archlinux you need the nfs and net-tools packages for this to work
+  #config.vm.synced_folder '.', '/vagrant-nfs', nfs: true
+
+  # run:
+  # vagrant rsync-auto
+  # to fire the service for automatic rsync synchronization
+  config.vm.synced_folder '.', '/vagrant-rsync', type: "rsync", rsync__auto: true,
+    rsync_args: ["--verbose", "--archive", "-z"]  # no --delete since .tox dirs would
+                                                  # be deleted all the time
+
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
